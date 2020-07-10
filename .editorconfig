@@ -1,0 +1,8 @@
+﻿root = true
+
+[*.{cs,config,js,sql}]
+end_of_line = crlf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = tab
+charset = utf-8
