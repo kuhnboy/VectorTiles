@@ -1,28 +1,29 @@
 using Google.Protobuf.Collections;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VectorTiles.VectorTile;
-using Xunit;
 
 namespace VectorTiles.Tests
 {
+	[TestClass]
 	public class AttributeDecoderTests
 	{
-		[Fact]
+		[TestMethod]
 		public void DecodeAttributes()
 		{
-			const string Key1 = "name";
-			const string Value1 = "ABCD";
-			const string Key2 = "id";
-			const long Value2 = 123;
+			const string key1 = "name";
+			const string value1 = "ABCD";
+			const string key2 = "id";
+			const long value2 = 123;
 
-			var keys = new RepeatedField<string> { Key1, Key2 };
+			var keys = new RepeatedField<string> { key1, key2 };
 			var values = new RepeatedField<Tile.Types.Value>
-				{ new Tile.Types.Value { StringValue = Value1 }, new Tile.Types.Value { IntValue = Value2 } };
+				{ new Tile.Types.Value { StringValue = value1 }, new Tile.Types.Value { IntValue = value2 } };
 			var tags = new RepeatedField<uint> { 0, 0, 1, 1 };
 
 			var result = new AttributeDecoder().DecodeAttributes(keys, values, tags);
 
-			Assert.Equal(Value1, result[Key1]);
-			Assert.Equal(Value2, result[Key2]);
+			Assert.AreEqual(value1, result[key1]);
+			Assert.AreEqual(value2, result[key2]);
 		}
 	}
 }

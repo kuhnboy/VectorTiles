@@ -54,7 +54,7 @@ namespace VectorTiles
 				coords.Add(new Point(x, y));
 			}
 
-			return coords.Count == 1 ? coords[0] : (Geometry)new MultiPoint(coords.ToArray());
+			return coords.Count == 1 ? coords[0] : new MultiPoint(coords.ToArray());
 		}
 
 		private Geometry DecodePolygon(RepeatedField<uint> geom)
@@ -63,7 +63,7 @@ namespace VectorTiles
 			long y = 0;
 
 			var ringList = new List<LinearRing>();
-			List<Coordinate> coords = null;
+			List<Coordinate>? coords = null;
 
 			uint length = 0;
 			uint command = 0;
@@ -90,6 +90,11 @@ namespace VectorTiles
 
 						coords = new List<Coordinate>();
 					}
+				}
+
+				if (coords == null)
+				{
+					throw new Exception("Invalid geometry encountered.");
 				}
 
 				if (command == (uint)Command.ClosePath)
@@ -125,7 +130,7 @@ namespace VectorTiles
 
 			var polygonList = new List<Polygon>();
 
-			LinearRing currentExterior = null;
+			LinearRing? currentExterior = null;
 			var currentInterior = new List<LinearRing>();
 
 			foreach (var ring in ringList)
@@ -148,7 +153,7 @@ namespace VectorTiles
 					}
 
 					currentExterior = ring;
-					currentInterior = new List<LinearRing>();
+					currentInterior = [];
 				}
 			}
 
@@ -157,7 +162,7 @@ namespace VectorTiles
 				polygonList.Add(new Polygon(currentExterior, currentInterior.ToArray()));
 			}
 
-			return polygonList.Count == 1 ? polygonList[0] : (Geometry)new MultiPolygon(polygonList.ToArray());
+			return polygonList.Count == 1 ? polygonList[0] : new MultiPolygon(polygonList.ToArray());
 		}
 	}
 }

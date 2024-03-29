@@ -11,11 +11,11 @@ namespace VectorTiles
 	{
 		public (RepeatedField<uint> geom, Tile.Types.GeomType geomType) EncodeGeometry(Geometry geometry)
 		{
-			if (geometry is Polygon || geometry is MultiPolygon)
+			if (geometry is Polygon or MultiPolygon)
 			{
 				return (EncodePolygon(geometry), Tile.Types.GeomType.Polygon);
 			}
-			else if (geometry is Point || geometry is MultiPoint)
+			else if (geometry is Point or MultiPoint)
 			{
 				return (EncodePoint(geometry), Tile.Types.GeomType.Point);
 			}

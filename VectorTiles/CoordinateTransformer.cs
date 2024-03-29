@@ -15,13 +15,13 @@ namespace VectorTiles
 		private const int TileSize = 256;
 		private const int VectorTileExtent = 4096;
 
-		private static readonly CoordinateSystemFactory Csf = new CoordinateSystemFactory();
-		private static readonly CoordinateTransformationFactory Ctf = new CoordinateTransformationFactory();
-		private static readonly CoordinateSystem epsg4326 = Csf.CreateFromWkt(
+		private static readonly CoordinateSystemFactory Csf = new();
+		private static readonly CoordinateTransformationFactory Ctf = new();
+		private static readonly CoordinateSystem Epsg4326 = Csf.CreateFromWkt(
 			"GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]]");
 
-		private static readonly ICoordinateTransformation MetersToLatLon = Ctf.CreateFromCoordinateSystems(ProjectedCoordinateSystem.WebMercator, epsg4326);
-		private static readonly ICoordinateTransformation LatLonToMeters = Ctf.CreateFromCoordinateSystems(epsg4326, ProjectedCoordinateSystem.WebMercator);
+		private static readonly ICoordinateTransformation MetersToLatLon = Ctf.CreateFromCoordinateSystems(ProjectedCoordinateSystem.WebMercator, Epsg4326);
+		private static readonly ICoordinateTransformation LatLonToMeters = Ctf.CreateFromCoordinateSystems(Epsg4326, ProjectedCoordinateSystem.WebMercator);
 
 		public Envelope GetTileBounds(int x, int y, int z)
 		{

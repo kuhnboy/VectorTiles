@@ -16,10 +16,10 @@ namespace VectorTiles
 		// with field data and not state or country polygons. We can use this to just not clip at higher zooms.
 		private const int MinimumClippingZoom = 12;
 
-		private readonly GeometryEncoder geometryEncoder = new GeometryEncoder();
-		private readonly AttributeEncoder attributeEncoder = new AttributeEncoder();
-		private readonly CoordinateTransformer coordinateTransformer = new CoordinateTransformer();
-		private readonly PolygonClipper polygonClipper = new PolygonClipper();
+		private readonly GeometryEncoder _geometryEncoder = new();
+		private readonly AttributeEncoder _attributeEncoder = new();
+		private readonly CoordinateTransformer _coordinateTransformer = new();
+		private readonly PolygonClipper _polygonClipper = new();
 
 		public async Task<Stream> GenerateTile<T>(IEnumerable<VectorLayer<T>> layers, int x, int y, int z) where T : class
 		{
@@ -54,7 +54,7 @@ namespace VectorTiles
 			await foreach (var item in layer.Items)
 			{
 				var geometry = layer.GeoProperty(item);
-				if (!(geometry is Polygon || geometry is MultiPolygon || geometry is Point || geometry is MultiPoint))
+				if (geometry is not (Polygon or MultiPolygon or Point or MultiPoint))
 				{
 					// Ignore things that aren't polygons for now.
 					continue;
@@ -63,11 +63,11 @@ namespace VectorTiles
 				var clippedGeometry = z < MinimumClippingZoom ? geometry : ClipToTile(geometry, tileBounds);
 				if (clippedGeometry != null)
 				{
-					var transformed = coordinateTransformer.GetTileCoordinates(clippedGeometry, x, y, z);
+					var transformed = _coordinateTransformer.GetTileCoordinates(clippedGeometry, x, y, z);
 
-					var (geom, geomType) = geometryEncoder.EncodeGeometry(transformed);
+					var (geom, geomType) = _geometryEncoder.EncodeGeometry(transformed);
 
-					var tags = attributeEncoder.EncodeAttributes(allKeys, allValues, layer.Attributes(item));
+					var tags = _attributeEncoder.EncodeAttributes(allKeys, allValues, layer.Attributes(item));
 
 					var feature = new Tile.Types.Feature { Type = geomType };
 					feature.Geometry.AddRange(geom);
@@ -88,7 +88,7 @@ namespace VectorTiles
 			var values = new Tile.Types.Value[allValues.Count];
 			foreach (var allValue in allValues)
 			{
-				values[allValue.Value] = attributeEncoder.EmitValue(allValue.Key);
+				values[allValue.Value] = _attributeEncoder.EmitValue(allValue.Key);
 			}
 
 			tileLayer.Values.AddRange(values);
@@ -113,7 +113,7 @@ namespace VectorTiles
 
 		private Polygon GetTileClipBounds(int x, int y, int z)
 		{
-			var tileBounds = coordinateTransformer.GetTileBounds(x, y, z);
+			var tileBounds = _coordinateTransformer.GetTileBounds(x, y, z);
 
 			// If we clip *to* the tile we will see things like polygon outlines
 			// at the edge of each tile which doesn't make a contiguous shape when viewed with adjacent tiles.
@@ -129,7 +129,7 @@ namespace VectorTiles
 			}));
 		}
 
-		private Geometry ClipToTile(Geometry geometry, Polygon tileBounds)
+		private Geometry? ClipToTile(Geometry geometry, Polygon tileBounds)
 		{
 			if (geometry is Point p)
 			{
@@ -141,7 +141,7 @@ namespace VectorTiles
 				return new MultiPoint(mp.Geometries.Where(tileBounds.Contains).Cast<Point>().ToArray());
 			}
 
-			return polygonClipper.ClipPolygon(geometry, tileBounds);
+			return _polygonClipper.ClipPolygon(geometry, tileBounds);
 		}
 	}
 }

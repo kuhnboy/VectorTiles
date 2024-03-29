@@ -5,9 +5,9 @@ namespace VectorTiles
 {
 	internal class AttributeDecoder
 	{
-		public Dictionary<string, object> DecodeAttributes(RepeatedField<string> keys, RepeatedField<VectorTile.Tile.Types.Value> values, RepeatedField<uint> tags)
+		public Dictionary<string, object?> DecodeAttributes(RepeatedField<string> keys, RepeatedField<VectorTile.Tile.Types.Value> values, RepeatedField<uint> tags)
 		{
-			var result = new Dictionary<string, object>();
+			var result = new Dictionary<string, object?>();
 
 			for (var i = 0; i < tags.Count; i += 2)
 			{
@@ -20,7 +20,7 @@ namespace VectorTiles
 			return result;
 		}
 
-		private object EmitValue(VectorTile.Tile.Types.Value value)
+		private object? EmitValue(VectorTile.Tile.Types.Value value)
 		{
 			if (value.HasBoolValue)
 			{

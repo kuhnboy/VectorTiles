@@ -1,13 +1,14 @@
 using Google.Protobuf.Collections;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NetTopologySuite.IO;
 using VectorTiles.VectorTile;
-using Xunit;
 
 namespace VectorTiles.Tests
 {
+	[TestClass]
 	public class GeometryEncoderTests
 	{
-		[Fact]
+		[TestMethod]
 		public void EncodeGeometry_Polygon()
 		{
 			var wkt = new WKTReader().Read("POLYGON ((1818 2642, 1818 2628, 1862 2628, 1862 2641, 1818 2642))");
@@ -22,11 +23,11 @@ namespace VectorTiles.Tests
 
 			var (geometry, type) = new GeometryEncoder().EncodeGeometry(wkt);
 
-			Assert.Equal(Tile.Types.GeomType.Polygon, type);
-			Assert.Equal(expectedResult, geometry);
+			Assert.AreEqual(Tile.Types.GeomType.Polygon, type);
+			Assert.AreEqual(expectedResult, geometry);
 		}
 
-		[Fact]
+		[TestMethod]
 		public void EncodeGeometry_MultiPolygon()
 		{
 			var wkt = new WKTReader().Read("MULTIPOLYGON (((2857 3095, 2826 3092, 2825 3091, 2826 3091, 2829 3091, 2831 3091, 2832 3090, 2855 3092, 2856 3092, 2857 3095)), ((2861 3099, 2827 3096, 2827 3095, 2827 3094, 2826 3093, 2857 3095, 2858 3096, 2859 3096, 2860 3097, 2861 3097, 2862 3098, 2862 3099, 2861 3099)), ((2837 3103, 2835 3101, 2834 3101, 2827 3100, 2827 3098, 2827 3097, 2862 3100, 2863 3103, 2861 3104, 2859 3104, 2857 3103, 2855 3103, 2854 3103, 2852 3103, 2844 3103, 2837 3103)))");
@@ -44,11 +45,11 @@ namespace VectorTiles.Tests
 
 			var (geometry, type) = new GeometryEncoder().EncodeGeometry(wkt);
 
-			Assert.Equal(Tile.Types.GeomType.Polygon, type);
-			Assert.Equal(expectedResult, geometry);
+			Assert.AreEqual(Tile.Types.GeomType.Polygon, type);
+			Assert.AreEqual(expectedResult, geometry);
 		}
 
-		[Fact]
+		[TestMethod]
 		public void EncodeGeometry_MultiPolygon_InnerRing()
 		{
 			var wkt = new WKTReader().Read(
@@ -80,11 +81,11 @@ namespace VectorTiles.Tests
 
 			var (geometry, type) = new GeometryEncoder().EncodeGeometry(wkt);
 
-			Assert.Equal(Tile.Types.GeomType.Polygon, type);
-			Assert.Equal(expectedResult, geometry);
+			Assert.AreEqual(Tile.Types.GeomType.Polygon, type);
+			Assert.AreEqual(expectedResult, geometry);
 		}
 
-		[Fact]
+		[TestMethod]
 		public void EncodeGeometry_Point()
 		{
 			var wkt = new WKTReader().Read("POINT (1818 2642)");
@@ -99,11 +100,11 @@ namespace VectorTiles.Tests
 
 			var (geometry, type) = new GeometryEncoder().EncodeGeometry(wkt);
 
-			Assert.Equal(Tile.Types.GeomType.Point, type);
-			Assert.Equal(expectedResult, geometry);
+			Assert.AreEqual(Tile.Types.GeomType.Point, type);
+			Assert.AreEqual(expectedResult, geometry);
 		}
 
-		[Fact]
+		[TestMethod]
 		public void EncodeGeometry_MultiPoint()
 		{
 			var wkt = new WKTReader().Read("MULTIPOINT ((1818 2642), (1818 2628), (1862 2628), (1862 2641))");
@@ -118,8 +119,8 @@ namespace VectorTiles.Tests
 
 			var (geometry, type) = new GeometryEncoder().EncodeGeometry(wkt);
 
-			Assert.Equal(Tile.Types.GeomType.Point, type);
-			Assert.Equal(expectedResult, geometry);
+			Assert.AreEqual(Tile.Types.GeomType.Point, type);
+			Assert.AreEqual(expectedResult, geometry);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package vector_tile;
+package vector_tiles.vector_tile;
 
 option optimize_for = LITE_RUNTIME;
 
